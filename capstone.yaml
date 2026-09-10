@@ -1,0 +1,9 @@
+run: py -m uvicorn app.main:app --reload
+seed: py app/seed.py
+test: py -m pytest
+base_url: http://localhost:8000
+endpoints:
+  - POST /widgets
+  - GET /widgets/{id}/config
+  - POST /submissions
+  - GET /dashboard/{widget_id}
