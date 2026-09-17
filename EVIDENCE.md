@@ -14,3 +14,9 @@ GET /widget.js -> Cache-Control: public, max-age=31536000, immutable
 
 Config is short-lived (owner can update widget settings), script is cached
 long-term since it's a versioned bundle that only changes on release.
+
+## Widget renders on second origin
+Served customer test page from http://localhost:5500 (separate from API at :8000).
+Widget script loaded via <script src="http://localhost:8000/widget.js?id=...">,
+fetched config, and rendered a form with the widget's title and button text.
+No CORS errors in browser console.
