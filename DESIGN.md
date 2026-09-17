@@ -54,3 +54,9 @@ authenticated user's id. No shared reads across owners.
 - POST /submissions                   (rate-limited, spam-checked, validated)
 
 ## Layer sketch
+
+
+## Non-goal
+No real CDN, hosting, or custom domain. No form-builder UI — widget config is
+JSON in, minimal rendered form out. No multi-widget-type polish beyond proving
+the pattern on 1–2 types.
