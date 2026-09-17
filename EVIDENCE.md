@@ -7,3 +7,10 @@ Result: 404 Not Found
 
 User 2 was authenticated successfully (no 401) but correctly denied access
 to user 1's widget — isolation enforced via owner_id filter on every query.
+
+## Cached widget delivery
+GET /widgets/{id}/config -> Cache-Control: public, max-age=60
+GET /widget.js -> Cache-Control: public, max-age=31536000, immutable
+
+Config is short-lived (owner can update widget settings), script is cached
+long-term since it's a versioned bundle that only changes on release.
