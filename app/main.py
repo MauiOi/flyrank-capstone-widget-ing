@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth as auth_router, widgets as widgets_router, delivery as delivery_router
+from app.routers import auth as auth_router, widgets as widgets_router, delivery as delivery_router, submissions as submissions_router
+
 app = FastAPI(title="Widget Platform")
 
 app.add_middleware(
@@ -14,6 +15,7 @@ app.add_middleware(
 app.include_router(auth_router.router)
 app.include_router(widgets_router.router)
 app.include_router(delivery_router.router)
+app.include_router(submissions_router.router)
 
 
 @app.exception_handler(HTTPException)

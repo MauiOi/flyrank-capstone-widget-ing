@@ -20,3 +20,25 @@ Served customer test page from http://localhost:5500 (separate from API at :8000
 Widget script loaded via <script src="http://localhost:8000/widget.js?id=...">,
 fetched config, and rendered a form with the widget's title and button text.
 No CORS errors in browser console.
+
+## Public submission endpoint
+
+**Preflight (CORS):**
+OPTIONS /submissions with Origin: http://localhost:5500
+-> Access-Control-Allow-Origin: *
+
+**Valid submission:**
+POST /submissions {"widget_id":"feb26ccb...","data":{"value":"test@example.com"}}
+-> 201, row stored with owner_id auto-filled from widget, ip_address captured
+
+**Malformed payload (missing widget_id):**
+POST /submissions {"data":{"value":"x"}}
+-> 422, not 500
+
+**Oversized payload (6000 bytes):**
+POST /submissions with large data field
+-> 413, not 500
+
+**Invalid widget_id (well-formed but doesn't exist):**
+POST /submissions {"widget_id":"00000000-0000-0000-0000-000000000000",...}
+-> 400, not 500
