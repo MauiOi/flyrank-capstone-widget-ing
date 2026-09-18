@@ -42,3 +42,29 @@ POST /submissions with large data field
 **Invalid widget_id (well-formed but doesn't exist):**
 POST /submissions {"widget_id":"00000000-0000-0000-0000-000000000000",...}
 -> 400, not 500
+
+## Abuse protection — rate limiting
+Fired 6 rapid POST /submissions from same IP (limit: 5/minute).
+Requests 1-5: 201 success. Request 6: 429.
+(Verified in isolation after quota reset: single request after 65s wait -> 201 success,
+confirming limiter resets correctly per window.)
+
+## Abuse protection — honeypot
+POST /submissions with hp_field populated (simulating a bot filling every field)
+-> 400, submission rejected, not stored.
+
+## Geo enrichment — provider fallback chain
+Both providers up: country=United States, city=Ashburn (real ip-api.com lookup for 8.8.8.8)
+Provider A forced down: country=Canada, city=Toronto (fallback provider B)
+Both providers down: country=null, city=null, still 201 (graceful degradation, never fails)
+
+Note: ipapi.co (originally planned provider B) blocks automated requests via
+Cloudflare bot challenge, confirmed via direct curl-equivalent test. Provider B
+is mocked per the capstone brief's guidance to keep the fallback proof
+deterministic; provider A (ip-api.com) is the live, real lookup.
+
+## Safe side effects — email failure isolation
+EMAIL_FORCE_FAIL=true forced send_confirmation() to raise.
+Result: submission still returned 201 and was stored normally.
+Server log showed no unhandled traceback — exception caught and swallowed
+in the try/except around the notification call.
