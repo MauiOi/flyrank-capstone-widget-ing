@@ -7,8 +7,12 @@ from supabase import create_client, AuthApiError
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")  # backend uses service_role, bypasses RLS — tenant checks happen in app code
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+
+# Dedicated to database operations only. Never call supabase.auth.sign_in_* or
+# sign_up on this instance — doing so swaps its session and silently breaks
+# the service_role bypass on every query made afterward.
+supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 bearer_scheme = HTTPBearer()
 

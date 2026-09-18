@@ -68,3 +68,10 @@ EMAIL_FORCE_FAIL=true forced send_confirmation() to raise.
 Result: submission still returned 201 and was stored normally.
 Server log showed no unhandled traceback — exception caught and swallowed
 in the try/except around the notification call.
+
+## Dashboard API
+GET /dashboard/{widget_id} authenticated as owner
+-> 200, total_submissions, counts_by_day, geo_breakdown correctly aggregated
+
+Attempted same request authenticated as a different user
+-> 404 Not Found (tenant isolation holds on dashboard endpoint too)
